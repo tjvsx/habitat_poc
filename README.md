@@ -10,7 +10,7 @@ Run the test with ```npx hardhat test```
 
 ### What is new?
 - the deploy script *deploy.js* deploys a git-diamond for the test env
-- diamond:clone accepts `--new` flag, which deploys a new diamond proxy contract, cutting the cloned facets in its constructor
+- diamond:clone deploys a new diamond proxy contract, cutting the cloned facets in its constructor
 - the ***runCommands(..)*** function now accepts `args` type instead of `file`
 
 ---
