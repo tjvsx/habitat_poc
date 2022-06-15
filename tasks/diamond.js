@@ -21,6 +21,9 @@ const {
   getMetadataFromAddress,
   getFunctionSelectorFromAbi
 } = require('./lib/utils.js')
+const { 
+  createAddFacetCut
+} = require('../scripts/libraries/cuts.js')
 
 async function runCommands(commands, args) {
   for (let i = 0; i<commands.length; i++) { 
@@ -226,11 +229,23 @@ task("diamond:deploy", "Deploy a new diamond")
 
 task("diamond:clone", "Do stuff with diamonds")
   .addParam("address", "The diamond's address")
-  .addFlag("new", "Deploy a new Diamond") // TODO - send all facets through diamond constructor to be cut on deployment
+  .addFlag("new", "Deploy a new Diamond proxy contract")
   .addOptionalParam("o", "The file to create", "diamond.json")
   .setAction(async (args, hre) => {
     const CHAIN_ID = getChainIdByNetworkName(hre.config.defaultNetwork)
     let output = await loupe(args.address, CHAIN_ID)
+
+    if (args.new) {
+      let facets = [];
+      for (const contract of Object.values(output.contracts)) {
+        facets.push(await ethers.getContractAt(contract.name, contract.address));
+      }
+      let cuts = createAddFacetCut(facets);
+      const Diamond = await ethers.getContractFactory('Diamond');
+      const diamond = await Diamond.deploy(cuts, ethers.constants.AddressZero, '0x');
+      await diamond.deployed();
+      output.address = diamond.address;
+    }
 
     if (args.o) {
       let filename = args.o

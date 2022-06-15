@@ -1,1 +1,1 @@
-npx hardhat diamond:clone
+npx hardhat diamond:clone --new

@@ -1,8 +1,7 @@
 /* global ethers */
 
 const { 
-  createAddFacetCut,
-  replaceFacet
+  createAddFacetCut
 } = require('./libraries/cuts.js');
 
 const {
