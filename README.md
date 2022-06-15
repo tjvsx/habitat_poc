@@ -3,6 +3,16 @@
 
 To understand how the contracts work, see: https://github.com/0xHabitat/ontap_contracts
 
+How to use:
+Start ganache development chain with ```yarn dev:start```
+Deploy the git-diamond with ```npx hardhat run scripts/deploy.js```
+Run the test with ```npx hardhat test```
+
+What is new?
+- the deploy script *deploy.js* deploys a git-diamond for the test env
+- diamond:clone accepts `--new` flag, which deploys a new diamond proxy contract, cutting the cloned facets in its constructor
+- the ***runCommands(..)*** function now accepts `args` type instead of `file`
+
 ---
 
 # Diamond Task
