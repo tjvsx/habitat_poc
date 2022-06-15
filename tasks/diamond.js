@@ -22,21 +22,24 @@ const {
   getFunctionSelectorFromAbi
 } = require('./lib/utils.js')
 
-async function runCommands(commands, file) {
-  for (let i = 0; i<commands.length; i++) {
-      let command = `${commands[i]} --o ${file}`
-      try {
-          console.log(command)
-          const {stdout} = await exec(command)
-          console.log(stdout)
-      } catch(e) {
-          if (e.toString().includes('HH108')) {
-              console.error('You need to run the development environment first, try running: yarn dev:start in another terminal before running this command.')
-              process.exit(1)
-          } else {
-              console.log(e.toString())
-          }
+async function runCommands(commands, args) {
+  for (let i = 0; i<commands.length; i++) { 
+    let command = `${commands[i]} --o ${args.o}`
+    if (commands[i] == 'npx hardhat diamond:clone' || 'hh diamond:clone') {
+      command = command.concat(` --address ${args.address}`)
+    }
+    try {
+      console.log(command)
+      const {stdout} = await exec(command)
+      console.log(stdout)
+    } catch(e) {
+      if (e.toString().includes('HH108')) {
+        console.error('You need to run the development environment first, try running: yarn dev:start in another terminal before running this command.')
+        process.exit(1)
+      } else {
+        console.log(e.toString())
       }
+    }
   }
 }
 
@@ -120,13 +123,13 @@ task("diamond:deploy", "Deploy a new diamond")
 
     let diamondLoupeFacetAddress
     if (args.new) {
-      const DiamondLoupeFacet = await ethers.getContractFactory('DiamondLoupeFacet')
+      const DiamondLoupeFacet = await ethers.getContractFactory('Readable')
       const diamondLoupeFacet = await DiamondLoupeFacet.deploy()
       diamondLoupeFacetAddress = diamondLoupeFacet.address
       await diamondLoupeFacet.deployed()
   
       contractsToVerify.push({
-        name: 'DiamondLoupeFacet',
+        name: 'Readable',
         address: diamondLoupeFacetAddress
       })
     } else {
@@ -135,13 +138,13 @@ task("diamond:deploy", "Deploy a new diamond")
 
     let ownershipFacetAddress
     if (args.new) {
-      const OwnershipFacet = await ethers.getContractFactory('OwnershipFacet')
+      const OwnershipFacet = await ethers.getContractFactory('Ownership')
       const ownershipFacet = await OwnershipFacet.deploy()
       ownershipFacetAddress = ownershipFacet.address
       await ownershipFacet.deployed()
   
       contractsToVerify.push({
-        name: 'OwnershipFacet',
+        name: 'Ownership',
         address: ownershipFacetAddress
       })
     } else {
@@ -170,7 +173,7 @@ task("diamond:deploy", "Deploy a new diamond")
     const cut = []
     if (!args.excludeLoupe) {
       console.log('Adding Loupe Facet...')
-      const facet = await ethers.getContractAt('DiamondLoupeFacet', diamondLoupeFacetAddress)
+      const facet = await ethers.getContractAt('Readable', diamondLoupeFacetAddress)
       cut.push({
         facetAddress: facet.address,
         action: FacetCutAction.Add,
@@ -186,7 +189,7 @@ task("diamond:deploy", "Deploy a new diamond")
     }
     if (!args.excludeOwnership) {
       console.log('Adding Ownership Facet...')
-      const facet = await ethers.getContractAt('OwnershipFacet', ownershipFacetAddress)
+      const facet = await ethers.getContractAt('Ownership', ownershipFacetAddress)
       cut.push({
         facetAddress: facet.address,
         action: FacetCutAction.Add,
@@ -223,6 +226,7 @@ task("diamond:deploy", "Deploy a new diamond")
 
 task("diamond:clone", "Do stuff with diamonds")
   .addParam("address", "The diamond's address")
+  .addFlag("new", "Deploy a new Diamond") // TODO - send all facets through diamond constructor to be cut on deployment
   .addOptionalParam("o", "The file to create", "diamond.json")
   .setAction(async (args, hre) => {
     const CHAIN_ID = getChainIdByNetworkName(hre.config.defaultNetwork)
@@ -552,19 +556,9 @@ task("diamond:init", "Init the diamond.json from the DIAMONDFILE")
     const diamondFile = fs.readFileSync('DIAMONDFILE')
     const commands = diamondFile.toString().split('\n')
 
-    await runCommands(commands, args.o)
-  })
+    await runCommands(commands, args)
+  });
 
 module.exports = {};
-
-
-
-/** 
- * TODOS:
- * verify DiamondInit contract - not verifying
- * include 'diamond' (w/ address and other info) in diamond.json
- */
-
-
 
 

@@ -1,3 +1,9 @@
+# On-chain Library integration
+> This branch focuses on integrating the Gemcutter development environment with an onchain presets library. This can be accomplished through a DiamondCutFacet that is integrated with an already-deployed diamond that stores the presets and provides a git-system for reading/writing to the library.
+
+To understand how the contracts work, see: https://github.com/0xHabitat/ontap_contracts
+---
+
 # Diamond Task
 
 ## Work in Progress

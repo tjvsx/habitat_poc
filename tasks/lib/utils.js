@@ -40,7 +40,7 @@ let utils = {
     }
   },
   async loupe(address, CHAIN_ID) {
-    const diamondLoupeFacet = await ethers.getContractAt('DiamondLoupeFacet', address)
+    const diamondLoupeFacet = await ethers.getContractAt('Readable', address)
     const facets = await diamondLoupeFacet.facets()
     
     let contracts = {}
@@ -116,7 +116,7 @@ let utils = {
         let isRight = Object.keys(contractsInFile).includes(contract.name)
         if (isRight) {
           let buildInfoContract = contractsInFile[contract.name]
-          const results = await node.add(new Buffer(buildInfoContract.metadata))
+          const results = await node.add(new Buffer.from(buildInfoContract.metadata))
         }
       }
     }
