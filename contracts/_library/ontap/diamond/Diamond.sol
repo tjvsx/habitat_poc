@@ -11,17 +11,7 @@ contract Diamond is DiamondBase {
     using OwnableStorage for OwnableStorage.Layout;
 
     constructor(IDiamondWritable.FacetCut[] memory cuts, address target, bytes memory data) {
-
-        uint256 n = cuts.length;
-
-        IDiamondWritable.FacetCut[] memory facetCuts = new IDiamondWritable.FacetCut[](n);
-
-        // facetCuts: custom params
-        for (uint256 i; i < n; i++) {
-            facetCuts[i] = cuts[i];
-        }
-
-        DiamondBaseStorage.layout().diamondCut(facetCuts, target, data); // or cutAndCommit()
+        DiamondBaseStorage.layout().diamondCut(cuts, target, data);
         OwnableStorage.layout().owner = msg.sender;
     }
     receive() external payable {}

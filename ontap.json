@@ -20,30 +20,30 @@
   "contracts": {
     "Readable": {
       "name": "Readable",
-      "address": "0x86818b1929AB9A81DbB158C346988ce615393fBb",
+      "address": "0x9095b8e8a5a4E7Fcb7F569dDc325eAB089732B26",
       "type": "remote"
     },
     "Ownership": {
       "name": "Ownership",
-      "address": "0xdC89C434344C9CBf077262cEc476bc87e2B6faDb",
+      "address": "0x8ab4aFFe16B8986f4e049F24A7F67701312E2B8D",
       "type": "remote"
     },
     "Erc165": {
       "name": "Erc165",
-      "address": "0x9c7bF8CD650436D53481B08A88dE07cde1c9813b",
+      "address": "0x5C3670E0Ac747b03CD0e3B3165b2fd69e6fB790A",
       "type": "remote"
     },
     "Writable": {
       "name": "Writable",
-      "address": "0xA6ce2b4C1820C43F5801fC7dFcfbA6869a3CC75d",
+      "address": "0x68388e3ccF0e4b72C7C262DFB029DeCBA0538579",
       "type": "remote"
     },
     "Git": {
       "name": "Git",
-      "address": "0x28fD7412821557E8639783E194b1A563E35e095B",
+      "address": "0x1DbdE3fbc981A0B5E02778286aE623e864e09dCD",
       "type": "remote"
     }
   },
   "chainId": 1337,
-  "address": "0x4f2d49720c767DFEe8683f339625574959A9422F"
+  "address": "0x51E8aB3c2885860c34d38922c5a9b54215B8CC9b"
 }

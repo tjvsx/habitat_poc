@@ -1,5 +1,6 @@
 /* global ethers */
-
+const fs = require("fs");
+const { promises } = fs
 const { 
   createAddFacetCut
 } = require('./libraries/cuts.js');
@@ -9,6 +10,11 @@ const {
   verify,
   getChainIdByNetworkName
 } = require('../tasks/lib/utils.js')
+
+const {
+  updateDiamond
+} = require('../test/libraries/diamond.js');
+const { ethers } = require("hardhat");
 
 const init = '0xe1c7392a';
 
@@ -35,7 +41,7 @@ async function createOntap(cuts) {
   const x_readable = await ethers.getContractAt('Readable', ontap.address);
 
   let facetAddresses = [ontap.address]
-  for (cut of cuts) { facetAddresses.push(cut.target) }
+  for (let cut of cuts) { facetAddresses.push(cut.target) }
   const writableAddr = (await x_readable.facetAddresses()).filter((x) => {
     if (facetAddresses.indexOf(x) === -1) return x;
   })[0];
@@ -153,6 +159,27 @@ async function deploy() {
       address: facet.address
     })
   }
+
+  //get diamond abi from artifacts
+  const buffer = await promises.readFile('artifacts/hardhat-diamond-abi/HardhatDiamondABI.sol/Ontap.json')
+  const string = buffer.toString()
+  const abi = JSON.parse(string)
+
+  //write full diamond abi
+  await promises.writeFile('./ui/contracts/ontap.json', JSON.stringify(abi, null, 2));
+
+  //write addresses map
+  const map = {};
+  map[CHAIN_ID] = {
+    'OnTap': [ontap.address],
+    'Readable': [readable.address],
+    'Ownership': [ownership.address],
+    'Erc165': [erc165.address],
+    'Writable': [writable.address],
+    'Git': [git.address],
+    'OnTapInit': [ontapinit.address]
+  };
+  await promises.writeFile('./ui/contracts/deployments/map.json', JSON.stringify(map, null, 2));
 }
 
 if (require.main === module) {

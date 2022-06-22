@@ -19,4 +19,22 @@ function createAddFacetCut(contracts) {
   return cuts;
 }
 
+function createRemoveFacetCut(contracts) {
+  let cuts = [];
+  for (const contract of contracts) {
+    cuts.push(
+      {
+        target: ethers.constants.AddressZero,
+        action: action.remove,
+        selectors: Object.keys(contract.interface.functions)
+        // .filter((fn) => fn != 'init()')
+        .map((fn) => contract.interface.getSighash(fn),
+        ),
+      },
+    );
+  }
+  return cuts;
+}
+
 exports.createAddFacetCut = createAddFacetCut
+exports.createRemoveFacetCut = createRemoveFacetCut

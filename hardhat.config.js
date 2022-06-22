@@ -1,6 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-ethers");
 require('dotenv').config();
+require("hardhat-diamond-abi");
 
 
 //tasks
@@ -36,5 +37,10 @@ module.exports = {
   },
   mocha: {
     timeout: 80000
-  }
+  },
+  diamondAbi: {
+    name: "Ontap",
+    include: ["OnTap", "Git", "Writable", "Erc165", "Ownership", "Readable"],
+    strict: false,
+  },
 };

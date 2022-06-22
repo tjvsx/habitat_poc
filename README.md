@@ -3,10 +3,13 @@
 
 To understand how the contracts work, see: https://github.com/0xHabitat/ontap_contracts
 
-### How to use:
-Start ganache development chain with ```yarn dev:start```
-Deploy the git-diamond with ```npx hardhat run scripts/deploy.js```
-Run the test with ```npx hardhat test```
+## Run through the process:
+1. download hardhat packages: `yarn`
+2. start ganache: `yarn dev:start`
+3. deploy ontap diamond and generate conract info in ./ui/contracts: `npx hardhat run scripts/deploy.js`
+4. run test to make commits to the git-system: `npx hardhat test`
+5. run the UI- `cd ui && yarn && yarn dev`
+... the diamond contract's events are used to create a presets menu
 
 ### What is new?
 - the deploy script *deploy.js* deploys a git-diamond for the test env
